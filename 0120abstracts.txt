@@ -1,0 +1,528 @@
+package com.icia.abstracts;
+
+import java.util.*;
+
+/*
+ * 	참조변수는 부모 클래스 : 부모 클래스의 참조변수를 처리할 수 있으면 모든 자식 객체도 처리할 수 있다
+ *  	즉 강아지를 파라미터로 받는 함수는 고양이를 처리할 수 없다 -> 재사용이 불가능
+ *  	Pet을 파라미터로 받으면 함수는 고양이가 추가 처리되더라도 처리할 수 있다
+ *  재사용성을 높이려면 모든 Pet의 동작은 동일하게 만들어야 한다
+ *  	물을마신다()의 세부 구현은 다르다(고양이와 개는 물마시는 방법이 다르다)
+ *  	동작의 이름은 같아야 한다
+ *  부모 클래스는 메소드의 이름을 정해주는 역할 - 구체적인 코드를 넣을 수 없다 -> 추상 메소드
+ *  	추상 메소드를 가지는 클래스는 객체를 생성할 수 없다(추상 클래스) 
+ *  	이클립스는 추상 클래스에 에러를 낸다 -> 에러를 보고 개발자가 "아 내가 만들어야 할 메소드가 있구나"
+ *  
+ *  추상 클래스 - 추상 메소드를 가진다
+ *  인터페이스 - 추상 메소드와 상수만을 가진다
+ */
+interface BoardService {
+	public void write(Board board);
+	public Board read(int boardNo);
+	public List<Board> list(int pageno);
+	public void update(int boardNo, String title, String content);
+	public void delete(int boardNo);
+}
+
+class BoardServiceImpl implements BoardService {
+	public void write(@NotNull Board board) {
+		if(board==null) {
+			
+		}
+		if(Objects.isNull(board)==true) {
+			
+		}
+	}
+}
+public class Test1 {
+
+}
+
+
+
+package com.icia.abstracts;
+// 인터페이스는 표준, 추상클래스는 기본 구현
+
+// 웹 서버에서 실행하는 자바 클래스 -> Servlet(톰캣이 돌려줄 수 있는 자바 표준)
+interface Servlet {
+	// 서블릿이 태어나서 살다가 죽는다 -> life cycle 메소드(수명주기 메소드, 생명주기 메소드)
+	public void init();
+	public void service();
+	public void destory();
+}
+
+abstract class GenericServlet implements Servlet {
+	@Override
+	public void init() {
+		System.out.println("응애");
+	}
+	@Override
+	public void destory() {
+		System.out.println("가는 건 똑같아");
+	}
+}
+
+public class Test2 {
+
+}
+
+
+
+package com.icia.abstracts;
+
+import java.awt.event.*;
+import java.util.*;
+import java.util.stream.*;
+
+import javax.swing.*;
+
+// 인터페이스 -> 표준 -> 메소드 이름과 순서
+// 이벤트처리하려면 jQuery의 경우 $(선택자).click(function(e) { });
+// 	이벤트 소스 - 이벤트 이름과 객체 - 이벤트 핸들러(익명함수로 만들어서 파라미터로 넘겨버렸다)
+// button - ActionEvent - 자바는 함수이름을 생략할 수 없다 -> 이름을 붙여야 한다 -> 이름을 통일하자
+
+// swing 패키지는 자바 1.2에 추가된 패키지 -> 고전적인 의미의 extends를 사용한다
+// JFrame에 생성자에 "hello" super("hello")
+
+class MyApp extends JFrame implements ActionListener {
+	private JButton btn = new JButton("클릭");
+	public MyApp() {
+		super("hello");
+		// $(btn).click(actionPerformed); -> 자바에서는 메소드 이름이 직접 못오고 객체 이름이 와야 한다
+		// btn의 ActionEvent를 처리하는 actionPerformed는 내 안에 있어
+		btn.addActionListener(this);
+		add(btn);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(400, 400);
+		setVisible(true);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		System.out.println("버튼 클릭");
+	}
+}
+
+public class Test3 {
+	public static void main(String[] args) {
+		// 참조 변수 없는 객체 -> 익명 객체
+		MyApp myApp = new MyApp();
+	}
+}
+
+
+
+package com.icia.abstracts;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+class MyApp4 extends JFrame implements ActionListener {
+	private JButton btn1 = new JButton("왼쪽");
+	private JButton btn2 = new JButton("오른쪽");
+	public MyApp4() {
+		btn1.addActionListener(this);
+		btn2.addActionListener(this);
+		add(btn1, BorderLayout.WEST);
+		add(btn2, BorderLayout.EAST);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(400, 400);
+		setVisible(true);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// 객체를 등호로 비교하면 hashCode를 비교한다
+		// if(e.getActionCommand()=="왼쪽")
+		if(e.getActionCommand().equals("왼쪽"))
+			System.out.println("왼쪽 버튼 클릭");
+		else
+			System.out.println("오른쪽 버튼 클릭");
+	}
+}
+
+public class Test4 {
+	public static void main(String[] args) {
+		new MyApp4();
+	}
+}
+
+
+
+package com.icia.abstracts;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+// btn1과 btn2의 이벤트 핸들러를 따로 만들자 -> 클래스가 2개 있어야 한다
+class LeftBtnHandler implements ActionListener {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		System.out.println("왼쪽 버튼 클릭");
+	}
+}
+class RightButtonHandler implements ActionListener {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		System.out.println("오른쪽 버튼 클릭");
+	}
+}
+
+class MyApp5 extends JFrame {
+	private JButton btn1 = new JButton("왼쪽");
+	private JButton btn2 = new JButton("오른쪽");
+	public MyApp5() {
+		btn1.addActionListener(new LeftBtnHandler());
+		btn2.addActionListener(new RightButtonHandler());
+		add(btn1, BorderLayout.WEST);
+		add(btn2, BorderLayout.EAST);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(400, 400);
+		setVisible(true);
+	}
+}
+public class Test5 {
+	public static void main(String[] args) {
+		new MyApp5();
+	}
+}
+
+
+
+package com.icia.abstracts;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+// 5번 예제의 문제 : LeftBtnHandler, RightBtnHandler는 독립적인 클래스인가?
+// 				 구별은 필요하지만 독립적이지는 않다(MyApp6을 벗어나면 의미가 없다) -> MyApp6 내부에 위치하게 한다
+class MyApp6 extends JFrame {
+	// 내부 클래스의 이름은 외부클래스$내부클래스 -> MyApp6$LeftBtnHandler
+	class LeftBtnHandler implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("왼쪽 버튼 클릭");
+		}
+	}
+	class RightButtonHandler implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("오른쪽 버튼 클릭");
+		}
+	}
+	
+	private JButton btn1 = new JButton("왼쪽");
+	private JButton btn2 = new JButton("오른쪽");
+	public MyApp6() {
+		btn1.addActionListener(new LeftBtnHandler());
+		btn2.addActionListener(new RightButtonHandler());
+		add(btn1, BorderLayout.WEST);
+		add(btn2, BorderLayout.EAST);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(400, 400);
+		setVisible(true);
+	}
+}
+public class Test6 {
+	public static void main(String[] args) {
+		new MyApp6();
+	}
+}
+
+
+
+package com.icia.abstracts;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+// 내부 클래스의 이름을 생략하자 1단계 - 인터페이스의 객체를 만들자
+class MyApp7 extends JFrame {
+	// 인터페이스의 객체 생성 불가능 -> 추상 메소드 때문에
+	// 그러면 객체를 new하는 순간에 추상 메소드를 만들어버리자
+	ActionListener leftHandler = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("왼쪽 버튼 클릭");
+		}
+	};
+	ActionListener rightHandler = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("오른쪽 버튼 클릭");
+		}
+	};
+	
+	private JButton btn1 = new JButton("왼쪽");
+	private JButton btn2 = new JButton("오른쪽");
+	public MyApp7() {
+		btn1.addActionListener(leftHandler);
+		btn2.addActionListener(rightHandler);
+		add(btn1, BorderLayout.WEST);
+		add(btn2, BorderLayout.EAST);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(400, 400);
+		setVisible(true);
+	}
+}
+public class Test7 {
+	public static void main(String[] args) {
+		new MyApp7();
+	}
+}
+package com.icia.abstracts;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+
+// 내부 클래스의 이름을 생략하자 2단계 - 1단계 예제에서 leftHandler, rightHandler란 이름이 있었다
+//							  - addActionListener하는 순간에 ActionListener 객체를 만들어 버리자
+class MyApp8 extends JFrame {
+	private JButton btn1 = new JButton("왼쪽");
+	private JButton btn2 = new JButton("오른쪽");
+	public MyApp8() {
+		btn1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("왼쪽 버튼 클릭");
+			}
+		});
+		
+		// js의 화살표 함수 -> 자바는 Lambda 함수(인터페이스가 파라미터일 때만 사용 가능)
+		//				    자바는 인터페이스를 자동완성 -> 메소드가 하나인 인터페이스만 자동 완성이 가능
+		//					@FunctionInterface(추상 메소드를 하나만 가진다)의 경우만
+		// function sum(x, y) { return x+y; } ==> (x, y)=> { return x+y; }
+		// function sum(x) { return x; } ===> (x)=>{ return x; }
+		//								 ===>  x=> return x;
+		
+		btn2.addActionListener(e-> System.out.println("오른쪽 버튼 클릭"));
+		add(btn1, BorderLayout.WEST);
+		add(btn2, BorderLayout.EAST);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(400, 400);
+		setVisible(true);
+	}
+}
+public class Test8 {
+	public static void main(String[] args) {
+		new MyApp8();
+	}
+}
+
+
+package com.icia.abstracts2;
+
+import java.util.*;
+
+// 클래스를 재사용하자 - 내가 날짜 객체(java.util.Date, java.time.LocalDate)가 필요하다
+class MyClass1 extends Date {
+	// 상속에 의한 재사용 -> 한번만 받을 수 있다 -> IS_A 		A is-a B.  A는 B의 한종류이다
+	// 현재의 상속은 재사용이 아니라 -> A가 B의 종류면 다른 B의 자식들이 사용법이 같아야 한다
+}
+
+class MyClass2 {
+	// 의존에 의한 재사용 -> HAS_A						A has-a B. A는 B를 가진다(A는 B에 의존한다)
+	// 의존에 의해 클래스를 만드는 것은 composition
+	Date birthday;
+	Date joinday;
+}
+
+// 학생과 스마트폰의 관계를 정하자
+// 학생은 스마트폰이다					
+// 스마트폰은 학생이다
+// 학생은 스마트폰을 가진다
+// 스마트폰은 학생을 가진다
+public class Test1 {
+
+}
+
+package com.icia.servlet1;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+// 서블릿의 url을 지정. 사용자에게 개발 기술에 대한 정보를 1도 제공해서는 안된다
+@WebServlet("/hello.do")
+public class FirstServlet extends HttpServlet {
+	// Servlet 인터페이스의 공통 사항을 구현한 기본 클래스 HttpServlet
+	
+	// 클래스의 식별 번호 : 필요 없다
+	// private static final long serialVersionUID = 1L;
+       
+	// 생성자 : 서블릿 객체는 톰캣이 생성해서 돌리고 파괴한다 -> 생성자 불필요
+	/*
+    public FirstServlet() {
+        super();
+    }
+	*/
+	
+	// get 방식 요청에 동작
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("doGet 실행");
+	}
+
+	// post 방식 요청에 동작
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("doPost 실행");
+	}
+
+}
+
+
+
+package com.icia.servlet1;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/second")
+public class SecondServlet extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// ?name=spring&nai=20
+		String name = request.getParameter("name");
+		String nai = request.getParameter("nai");
+		System.out.println(name);
+		System.out.println(nai);
+	}
+
+}
+
+
+package com.icia.servlet1;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet("/s004.ssg")
+public class Servlet004 extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println(request.getParameter("nai"));
+	}
+}
+
+
+
+package com.icia.servlet1;
+
+import java.io.*;
+
+import javax.servlet.*;
+import javax.servlet.annotation.*;
+import javax.servlet.http.*;
+
+import org.apache.commons.lang3.math.*;
+
+/*
+ * HTTP 상태코드
+ * 200 	OK(성공) - 오류가 발생하지 않았다(내가 원하는 결과?? 그건 모른다)
+ * 400  서버에서 수신 거부(잘못된 타입 or 잘못된 설정) -> 콘솔창에 메시지 X
+ * 403	권한없음
+ * 404	Not Found
+ * 405	메소드 오류
+ * 500	서버에서 수신해서 처리하는데 에러가 났어요(콘솔창에 메시지가 나온다)
+*/
+@WebServlet("/s006.action")
+public class Servlet006 extends HttpServlet {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int value1 = NumberUtils.toInt(request.getParameter("value1"), 0);
+		int value2 = NumberUtils.toInt(request.getParameter("value2"), 0);
+		int result = value1 + value2;
+		System.out.println(result);
+	}
+}
+
+
+
+age com.icia.servlet1;
+
+import java.io.*;
+
+import javax.servlet.*;
+import javax.servlet.annotation.*;
+import javax.servlet.http.*;
+
+import org.apache.commons.lang3.math.*;
+
+/*
+ * HTTP 상태코드
+ * 200 	OK(성공) - 오류가 발생하지 않았다(내가 원하는 결과?? 그건 모른다)
+ * 400  서버에서 수신 거부(잘못된 타입 or 잘못된 설정) -> 콘솔창에 메시지 X
+ * 403	권한없음
+ * 404	Not Found
+ * 405	메소드 오류
+ * 500	서버에서 수신해서 처리하는데 에러가 났어요(콘솔창에 메시지가 나온다)
+*/
+@WebServlet("/s007.action")
+public class Servlet007 extends HttpServlet {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int value1 = NumberUtils.toInt(request.getParameter("value1"), 0);
+		int value2 = NumberUtils.toInt(request.getParameter("value2"), 0);
+		int result = value1 + value2;
+		
+		// request : 사용자 -> 서버
+		// response : 서버 -> 사용자. 최종적 사용자 웹 브라우저에 출력된다
+		//		response.getWriter()
+		
+		// utf-8을 설정 -> response를 이용해 출력하기 전에 utf-8로 설정하고 사용
+		response.setContentType("text/html;charset=utf-8");
+		
+		// 사용자 화면에 html 문자열을 출력한다
+		response.getWriter().println("<p>결과 : " + result + "</p>");
+		
+		
+	}
+}
+
+
+
+package com.icia.servlet1;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/third")
+public class ThirdServlet extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// localhost:8081/web/third?nai=20 	urlencoded 형식으로 값이 넘어온다
+		// localhost:8081/web/third 		-> nai라는 이름이 존재하지 않으면 null
+		// localhost:8081/web/third?nai= 	-> nai라는 이름은 있는 데 값은 없다 -> ""
+		
+		// 객체 값이 null인 건 아무 문제 안된다
+		// 그 상황에서 사용하면 NullPointerException이 뜬다
+		int nai = Integer.parseInt(request.getParameter("nai"));
+		System.out.println(nai);
+	}
+}
+
+
+
+

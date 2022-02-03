@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 오징어 상인, 컵 상인 빈을 등록하시오.  -->
+	<beans:bean class="com.icia.spring.example03.seller.SquidSeller" />
+	<beans:bean class="com.icia.spring.example03.seller.CupSeller" />
+</beans:beans>

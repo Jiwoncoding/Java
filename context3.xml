@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 
+		Seller seller = new CupSeller();
+		Mart mart = new Mart(seller); 
+	-->
+	<beans:bean id="seller" class="com.icia.spring.example03.seller.CupSeller" />
+	
+	<beans:bean id="mart" class="com.icia.spring.example03.mart.Mart">
+		<beans:constructor-arg ref="seller" />
+	</beans:bean>
+</beans:beans>

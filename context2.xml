@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 이름으로 찾으려면 빈에 아이디를 줘야 한다  -->
+	<beans:bean id="squidSeller" class="com.icia.spring.example03.seller.SquidSeller" />
+	<beans:bean id="cupSeller" class="com.icia.spring.example03.seller.CupSeller" />
+</beans:beans>

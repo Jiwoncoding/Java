@@ -2,8 +2,19 @@
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 3개의 공을 가지고 저글링하는 저글러 객체를 생성  -->
+	<!-- Juggler 클래스는 @AllArgsConstructor 지정 : 생성자 주입 -->
+	<beans:bean id="juggler" class="com.icia.spring.example07.performer.Juggler">
+		<beans:constructor-arg value="3" />
+	</beans:bean>
 	
-	<!-- 오징어 상인, 컵 상인 빈을 등록하시오.  -->
-	<beans:bean class="com.icia.spring.example03.seller.SquidSeller" />
-	<beans:bean class="com.icia.spring.example03.seller.CupSeller" />
+	<!-- 아빠 힘내세요 노래를 부르는 가수 객체를 생성  -->
+	<!-- Singer 클래스는 @Setter 지정 : 세터 주입 -->
+	<beans:bean id="singer" class="com.icia.spring.example07.performer.Singer">
+		<beans:property name="song" value="아빠 힘내세요" />
+	</beans:bean>
+	
+	<!-- Theater 객체를 생성 -->
+	<!-- 클래스가 만들어지고 사용하고 종료되고....라이프 사이클 메소드 -->
+	<beans:bean class="com.icia.spring.example07.theater.Theater" init-method="open" destroy-method="close" />
 </beans:beans>

@@ -1,42 +1,22 @@
-package com.icia.servlet3;
+package zboard_lambda;
 
-import java.io.*;
-
-import javax.servlet.*;
-import javax.servlet.annotation.*;
-import javax.servlet.http.*;
-
-import org.apache.commons.lang3.math.*;
-
-// 자바 프로그램 <-> url:외부에서 자바 프로그램을 부르는 이름
-// url을 통해 백엔드 프로그램에 대한 추측이 가능하도록 만들지 않는다
-@WebServlet("/01_24/test1")
-public class Test1 extends HttpServlet {
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int value = NumberUtils.toInt(request.getParameter("value"));
+public class Test1 {
+	public static void main(String[] args) {
+		// Gang of Four(GoF)가 디자인 패턴
+		// ~Factory : 객체를 생성하는 데 복잡한 옵션이나 정보가 필요. 대신 설정해 주는 클래스
 		
-		// 여기서 System.out은 사용자 컴퓨터가 아니라 서버 컴퓨터 -> 프로그래머만 확인
-		System.out.println(value);
+		// MyBatis의 경우 DataSource를 입력받아 SqlSession을 생성한 다음 SqlSession을 이용해 CRUD 처리
 		
-		PrintWriter out = response.getWriter();
-		out.println("<html>");
-		out.println("<head><title>입력 결과</title>");
-		out.println("<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>");
-		out.println("<script>");
-		out.println("$(document).ready(function() {");
-		out.println("alert('hello');");
-		out.println("})");
-		out.println("</script></head>");
-		out.println("<body>");
-		out.println("<p>입력한 숫자 : " + value + "<p>");
-		out.println("</body>");
+		// active시 최대 연결은 몇개? idle시 최대 연결 몇개? 타임아웃시간?.....설정을 잡을 수 있는데
+		// 설정을 안잡으면 SqlSession을 안만들건가?  적절하게 초기화해서 객체를 만들어주는 공장 -> Factory
 		
-		// 속도 향상을 위해서 서버는 출력을 모아서 한다 -> 내 꺼는 출력하세요
-		out.flush();
+		// 마이바티스의 SqlSessionFactory는 DataSource를 입력받아 SqlSession을 편리하게 사용할 수있는
+		// SqlSessionTemplate을 만들어준다
 		
+		// ~Builder : 객체 생성의 난해함(예를들어 필드가 String 10개)을 덜어준다
+		
+		// Facade : 표준 인터페이스 + 인터페이스를 구현한 구상(concrete) 클래스
+		//			표준을 가지고 작업을 하면 구상 클래스를 필요에 따라 교체하면서 사용
+	
 	}
 }
-
-
-
-

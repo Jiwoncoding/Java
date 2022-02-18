@@ -1,27 +1,24 @@
-package com.icia.servlet3;
+package zboard_lambda;
 
-import java.io.IOException;
+// 람다식을 이용해 간편하게 함수를 작성하려면...많은 작업이 필요하다
 
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+// 람다식을 사용하려면 추상 메소드를 하나가진 인터페이스가 바람직
+@FunctionalInterface
+interface 인사 {
+	public void hello();
+}
 
-import org.apache.commons.lang3.math.*;
-
-// 두 숫자의 덧셈 : /01_24/test4?val=10&val2=20 -> 서블릿이 결과 30 출력
-// 10라인처럼 안만들고 test4_input.jsp, 처리 서블릿, test4_result.jsp로 분리하겠다(View 분리)
-@WebServlet("/01_24/test4")
-public class Test4 extends HttpServlet {
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int val1 = NumberUtils.toInt(request.getParameter("val1"));
-		int val2 = NumberUtils.toInt(request.getParameter("val2"));
-		int result = val1 + val2;
-		
-		request.setAttribute("result", result);
-		RequestDispatcher rd = request.getRequestDispatcher("/01_24/test4_result.jsp");
-		rd.forward(request, response);
+class 학생 {
+	public void 꾸벅(인사 insa) {
+		insa.hello();
 	}
+}
 
+public class Test4 {
+	public static void main(String[] args) {
+		// 인터페이스가 있고 그 인터페이스를 이용하는 클래스가 있어야만 람다식을 사용할 수 있다
+		// 람다를 사용하려니 배보다 배꼽이 크다 -> 자바는 java.util.function 패키지를 이용해 FunctionInterface를 제공
+		학생 s = new 학생();
+		s.꾸벅(()->{ System.out.println("안녕하세요"); });
+	}
 }

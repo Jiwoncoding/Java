@@ -1,0 +1,76 @@
+톰캣이 서블릿을 생성하고 관리하고 파괴해준다
+- 서블릿의 생명 주기(라이프사이클) 메소드 : init -> service -> destroy
+	- Servlet 인터페이스 <- HttpServlet 서블릿(init, destory 기본구현. doGet/doPost) <- 나만의 서블릿
+- 프레임워크를 라이프사이클을 관리 -> 컨테이너(container) 라고 부른다
+
+스프링은 DI 컨테이너, AOP 컨테이너라고 부를 수 있다
+- DI는 Inversion of Control(제어 역전) : 프로그래머가 아니라 스프링이 객체를 new하면서 제어를 이끌어 간다
+- AOP : 횡단관심을 처리
+	Filter -> Interceptor -> AOP
+- 자바의 생명주기 : @PostConstruct(생성자 다음), @PreDestory(빈 파괴 직전)
+
+스프링 DI
+- 스프링빈을 생성 -> ApplicationContext에 등록
+	스프링이 한다 - @ComponentScan으로 패키지를 지정 
+		대상을 지정 - @Component, @Controller, @RestController, @ControllerAdvice, @RestControllerAdvice, @Service, @Repository
+	프로그래머가 한다 - @Bean
+	마이바티스가 한다 - @MapperScan, @Mapper
+- 스프링 DI는 타입으로? 이름으로?
+	타입기반으로 DI - no such bean(그 타입 빈을 못 찾겠다), no unique bean(그 타입 빈이 2개 이상이다)
+	이름으로 DI 가능
+		예를 들어 BoardController 빈의 이름은 boardController이다
+		만약 이름을 지정하고 싶다면 @Controller("bController")
+		주입할 때
+			@Autowired
+			@Qualifier("bController")
+	스프링의 DI 어노테이션 @Autowired, 자바 표준 DI 어노테이션이 @Inject
+
+스프링 컨트롤러
+- 스프링에서 모든 요청(/*)을 접수하는 FrontController 서블릿 : DispatcherServlet
+- 컨트롤러
+	경로지정 : @RequestMapping -> @GetMapping, @PostMapping, @PatchMapping, @PutMapping, @DeleteMapping
+	MVC : ModelAndView - 작업 결과 + 결과를 출력할 페이지 이름
+		GET : 서버의 변경이 없다 -> 재실행해도 안전 -> 즐겨찾기가 가능(querystring)			/product/read
+		POST : 서버의 변경이 있다 -> 재실행 금지 -> 뒤로가기, F5등으로 재실행하면 만료된 페이지	/product/add
+	REST : ResponseEntity - 작업 결과 + HTTP 상태 코드
+		GET : 읽기			/products/1			1-> @PathVariable	Integer pno	
+		POST : 쓰기			/products/1
+		PATCH : 일부 변경			/products/1?구매횟수=22		22->@RequestParam Integer 구매횟수
+		PUT : 전체 변경			/products/1?많은 파라미터
+		DELETE : 삭제			/products/1
+
+스프링 검증(Validation)
+- @Validated : 검증은 자바 표준. 스프링의 +알파된 빈 검증을 활성화하려면 사용한다
+	       검증에 실패할 경우 ConstraintViolationException이 발생 -> 컨트롤러 어드바이스로 넘겨서 오류 메시지 출력
+- @Valid : 객체를 검증할 경우 사용. 바로 뒤에 BindingResult을 적어줘야 하고 이 BindingResult에 오류 메시지가 담긴다
+
+서비스 : 업무 로직(비즈니스 로직)을 처리한다
+- 예를 들어 계좌이체 작업을 할 경우 아래 두 작업은 분리할 수 없다(함께 commit되거나 함께 rollback되어야 한다)
+	a.감소():
+	b.증가();
+- 이럴 때 메소드에 @Transactional 어노테이션을 지정해준다
+	구매 : 재고 감소 -> 구매 결정 -> 사용자의 구매횟수 변경 -> 사용자의 레벨 변경
+
+
+스프링 입출력
+- PropertyEditor : 사용자 입력을 적절한 객체로 구성해 준다 (0,1,2 -> enum BRONZE, SILVER, GOLD)
+	@InitBinder
+- MessageConverter : REST 방식에서 출력 형식 변환 담당
+	MVC의 경우 출력 형식은 ModelAndView고 Model은 자바 객체
+		따라서 Model의 형식을 지정할 필요가 없다
+	REST의 경우 만약 json으로 출력하려면 json 변환 객체를 등록
+		boot의 경우 json 변환 라이브러리로 jackson이 자동 등록
+		스프링 mvc의 경우 자동 등록되지 않는다 -> json 출력할 때 message converter를 찾을 수 없다....오류 발생
+
+
+
+
+
+	
+
+
+
+
+
+
+
